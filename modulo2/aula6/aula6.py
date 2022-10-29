@@ -70,6 +70,9 @@ dados[dados.IPTU.isnull()].shape[0]
 dados.info()
 
 # %%
+dados.to_csv('./modulo2/data/aluguel_residencial.csv', sep=';', index=False)
+
+# %%
 
 
 
