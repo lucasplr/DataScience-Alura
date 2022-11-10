@@ -1,0 +1,3 @@
+Regressaão linear é um procedimento realizado com dados contínuos, não classificativos.
+
+Utiliza para explicar o quanto a variação do dado é explicada pelas variáveis explicativas.
