@@ -1,10 +1,10 @@
 create tables:
 
     CREATE TABLE "orders" (
-        "row_id" int   NOT NULL,
+        "row_id" int NOT NULL unique,
         "order_id" varchar(10)   NOT NULL,
-        "item_id" int   NOT NULL,
-        "created_at" datetime   NOT NULL,
+        "item_id" varchar(10)   NOT NULL,
+        "created_at" timestamp   NOT NULL,
         "quantity" int   NOT NULL,
         "cust_id" int   NOT NULL,
         "delivery" boolean   NOT NULL,
@@ -15,7 +15,7 @@ create tables:
     );
 
     CREATE TABLE "customers" (
-        "cust_id" int   NOT NULL,
+        "cust_id" int   NOT NULL unique,
         "cust_firstname" varchar(50)   NOT NULL,
         "cust_lastname" varchar(50)   NOT NULL,
         CONSTRAINT "pk_customers" PRIMARY KEY (
@@ -24,7 +24,7 @@ create tables:
     );
 
     CREATE TABLE "addresses" (
-        "add_id" int   NOT NULL,
+        "add_id" int   NOT NULL unique,
         "delivery_adress1" varchar(200)   NOT NULL,
         "delivery_adress2" varchar(200)   NULL,
         "delivery_city" varchar(50)   NOT NULL,
@@ -35,7 +35,7 @@ create tables:
     );
 
     CREATE TABLE "items" (
-        "item_id" varchar(10)   NOT NULL,
+        "item_id" varchar(10)   NOT NULL unique,
         "sku" varchar(20)   NOT NULL,
         "item_name" varchar(100)   NOT NULL,
         "item_cat" varchar(100)   NOT NULL,
@@ -56,8 +56,8 @@ create tables:
         )
     );
 
-    CREATE TABLE "ingedient" (
-        "ing_id" varchar(10)   NOT NULL,
+    CREATE TABLE "ingredient" (
+        "ing_id" varchar(10)   NOT NULL unique,
         "ing_name" varchar(20)   NOT NULL,
         "ing_weight" int   NOT NULL,
         "ing_meas" varchar(20)   NOT NULL,
@@ -77,7 +77,7 @@ create tables:
     );
 
     CREATE TABLE "staff" (
-        "staff_id" varchar(20)   NOT NULL,
+        "staff_id" varchar(20)   NOT NULL unique,
         "first_name" varchar(50)   NOT NULL,
         "last_name" varchar(50)   NOT NULL,
         "position" varchar(100)   NOT NULL,
@@ -88,7 +88,7 @@ create tables:
     );
 
     CREATE TABLE "shift" (
-        "shift_id" varchar(20)   NOT NULL,
+        "shift_id" varchar(20)   NOT NULL unique,
         "day_of_week" varchar(10)   NOT NULL,
         "start_time" time   NOT NULL,
         "end_time" time   NOT NULL,
@@ -100,7 +100,7 @@ create tables:
     CREATE TABLE "rota" (
         "row_id" int   NOT NULL,
         "rota_id" varchar(20)   NOT NULL,
-        "date" datetime   NOT NULL,
+        "date" timestamp   NOT NULL,
         "shift_id" varchar(20)   NOT NULL,
         "staff_id" varchar(20)   NOT NULL,
         CONSTRAINT "pk_rota" PRIMARY KEY (
@@ -137,100 +137,86 @@ create tables:
 
 
 
-    
+    insert into orders (row_id, order_id, item_id, created_at, quantity, cust_id, delivery, add_id)
 
-drop table if exists customers;
+    values
 
-CREATE TABLE "customers" (
-    "cust_id" int primary key  NOT NULL,
-    "cust_firstname" varchar(50)   NOT NULL,
-    "cust_lastname" varchar(50)   NOT NULL
-);
+    (1, 'ord01', 'itm01', '09/01/2023 21:00:00', 1, 1,'Y', 1),
+    (2, 'ord02', 'itm02', '09/01/2023 22:00:00', 1, 1,'Y', 2),
+    (3, 'ord03', 'itm03', '09/01/2023 23:00:00', 2, 2,'Y', 3);
 
-drop table if exists addresses;
-CREATE TABLE "addresses" (
-    "add_id" int  primary key NOT NULL,
-    "delivery_adress1" varchar(200)   NOT NULL,
-    "delivery_adress2" varchar(200)   NULL,
-    "delivery_city" varchar(50)   NOT NULL,
-    "delivery_zipcode" varchar(20)   NOT NULL
-);
+    insert into customers (cust_id, cust_firstname, cust_lastname)
 
-drop table if exists ingredient;
-CREATE TABLE "ingredient" (
-    "ing_id" varchar(10) primary key  NOT NULL,
-    "ing_name" varchar(20)   NOT NULL,
-    "ing_weight" int   NOT NULL,
-    "ing_meas" varchar(20)   NOT NULL,
-    "ing_price" decimal(5,2)   NOT NULL
-);
+    values
+
+    (1, 'Alex', 'Smith'),
+    (2, 'Lucas', 'Riffel');
 
 
-drop table if exists inventory;
-CREATE TABLE "inventory" (
-    "inv_id" int primary key  NOT NULL,
-    "quantity" int   NOT NULL,
-    item_id varchar(10) NOT NULL
-);
+    insert into addresses (add_id, delivery_adress1, delivery_adress2, delivery_city, delivery_zipcode)
 
-drop table if exists recipe;
-CREATE TABLE "recipe" (
-    "row_id" int primary key  NOT NULL,
-    "recipe_id" varchar(20)   NOT NULL,
-    "quantity" int   NOT NULL,
-    ing_id varchar(10) references ingredient (ing_id),
-    ing_id varchar(10) references inventory (item_id)
-);
+    values
+
+    (1, 'Rua', 'Margherita', '', 'Crissiumal', '010101'),
 
 
-drop table if exists items;
-CREATE TABLE "items" (
-    "item_id" varchar(10)  primary key NOT NULL,
-    "item_name" varchar(100)   NOT NULL,
-    "item_cat" varchar(100)   NOT NULL,
-    "item_size" varchar(10)   NOT NULL,
-    "item_price" decimal(10,2)   NOT NULL,
-    sku varchar(20) references recipe (recipe_id)
-);
+    insert into items (item_id, sku, item_name, item_cat, item_size, item_price)
 
-drop table if exists orders;
+    values
 
-CREATE TABLE "orders" (
-    "row_id" int   PRIMARY KEY NOT NULL,
-    "order_id" varchar(10)   NOT NULL,
-    "item_id" int   NOT NULL,
-    "created_at" timestamp   NOT NULL,
-    "quantity" int   NOT NULL,
-    "delivery" boolean   NOT NULL,
-    "add_id" int   NOT NULL,
-    cust_id int references customers (cust_id),
-    add_id int references addresses (add_id),
-    item_id int references items (item_id)
-);
+    ('itm01', 'PZZ-MARG-R', 'Margherita', 'Pizza', 'Regular', 12),
+    ('itm02', 'PZZ-MARG-L', 'Margherita', 'Pizza', 'Large', 20),
+    ('itm03', 'PZZ-PARM-R', 'Parmegiana', 'Pizza', 'Regular', 15);
 
 
-drop table if exists staff;
-CREATE TABLE "staff" (
-    "staff_id" varchar(20)  primary key NOT NULL,
-    "first_name" varchar(50)   NOT NULL,
-    "last_name" varchar(50)   NOT NULL,
-    "position" varchar(100)   NOT NULL,
-    "hourly_rate" decimal(5,2)   NOT NULL
-);
+    insert into recipe (row_id, recipe_id, ing_id, quantity)
 
-drop table if exists shift;
-CREATE TABLE "shift" (
-    "shift_id" varchar(20) primary key  NOT NULL,
-    "day_of_week" varchar(10)   NOT NULL,
-    "start_time" time   NOT NULL,
-    "end_time" time   NOT NULL
-);
+    values
 
-drop table if exists rota;
-CREATE TABLE "rota" (
-    "row_id" int primary key  NOT NULL,
-    "rota_id" varchar(20)   NOT NULL,
-    "date" timestamp   NOT NULL,
-    "shift_id" varchar(20)  references shift (shift_id),
-    "staff_id" varchar(20) references  staff(staff_id)
-);
+    (1, 'PZZ-MARG-R', 'ING01', 250),
+    (2, 'PZZ-MARG-L', 'ING02', 150),
+    (3, 'PZZ-PARM-R', 'ING03', 80);
+
+    insert into ingredient (ing_id, ing_name, ing_weight, ing_meas, ing_price)
+
+    values
+
+    ('ING01', 'Tomato',2000, 'grams', 4.2),
+    ('ING02', 'Onion',500, 'grams', 3),
+    ('ING03', 'Oregano', 25, 'grams', 5.25);
+    --(3, 'ord03', 'itm03', '09/01/2023 23:00:00', 2, 2,'Y', 3);
+
+    insert into inventory (inv_id, item_id, quantity)
+
+    values
+
+    (1, 'ING01', 5),
+    (2, 'ING02', 3),
+    (3, 'ING03', 2);
+    --(3, 'ord03', 'itm03', '09/01/2023 23:00:00', 2, 2,'Y', 3);
+
+
+    insert into staff (staff_id, first_name, last_name, position, hourly_rate)
+
+    values
+
+    ('st01', 'Alex', 'Johnes', 'Chef', 15.25),
+    ('st02', 'Carlos', 'Alberto', 'Head chef', 21.5),
+    ('st03', 'Alex', 'Johnes', 'Delivery rider', 14.2);
+
+
+    insert into shift (shift_id, day_of_week, start_time, end_time)
+
+    values
+
+    ('sh01', 'Monday', '10:30:00', '16:00:00'),
+    ('sh02', 'Saturday', '18:30:00', '23:00:00'),
+    ('sh03', 'Friday', '19:00:00', '24:00:00');
+
+    insert into rota (row_id, rota_id, date, shift_id, staff_id)
+
+    values
+
+    (1, 'ro01', '09/01/2023', 'sh01', 'st01'),
+    (2, 'ro01', '09/01/2023', 'sh02', 'st02'),
+    (3, 'ro02', '09/01/2023', 'sh03', 'st03');
