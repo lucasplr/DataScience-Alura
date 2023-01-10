@@ -157,7 +157,9 @@ create tables:
 
     values
 
-    (1, 'Rua', 'Margherita', '', 'Crissiumal', '010101'),
+    (1, 'Rua', '', 'Crissiumal', '010101'),
+    (2, 'Rua', '', 'Crissiumal', '020101'),
+    (3, 'Vila', '', 'Crissiumal', '030101');
 
 
     insert into items (item_id, sku, item_name, item_cat, item_size, item_price)
@@ -220,3 +222,23 @@ create tables:
     (1, 'ro01', '09/01/2023', 'sh01', 'st01'),
     (2, 'ro01', '09/01/2023', 'sh02', 'st02'),
     (3, 'ro02', '09/01/2023', 'sh03', 'st03');
+
+
+
+    select 
+    o.order_id,
+    i.item_price,
+    o.quantity,
+    i.item_cat,
+    i.item_name,
+    o.created_at,
+    a.delivery_adress1,
+    a.delivery_adress2,
+    a.delivery_city,
+    a.delivery_zipcode,
+    o.delivery
+    from orders o
+    left join addresses a on
+    a.add_id = o.add_id
+    left join items i on
+    i.item_id = o.item_id;
