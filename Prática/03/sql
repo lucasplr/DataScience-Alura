@@ -242,3 +242,31 @@ create tables:
     a.add_id = o.add_id
     left join items i on
     i.item_id = o.item_id;
+
+	select 
+	s1.item_id,
+	s1.ing_id,
+	s1.ing_name,
+	s1.ing_weight,
+	s1.ing_price,
+	s1.order_quantity,
+	s1.recipe_quantity,
+	s1.order_quantity*s1.recipe_quantity as ordered_weight,
+	round(s1.ing_price/s1.ing_weight,2) as unit_cost,
+	round((s1.order_quantity*s1.recipe_quantity) * (s1.ing_price/s1.ing_weight),2) as ingredient_cost
+	from 
+	(select 
+	o.item_id,
+	i.sku,
+	i.item_name,
+	r.ing_id,
+	ing.ing_name,
+	ing.ing_weight,
+	ing.ing_price,
+	r.quantity as recipe_quantity,
+	sum(o.quantity) as order_quantity
+	from orders o
+	left join items i on i.item_id = o.item_id
+	left join recipe r on r.recipe_id = i.sku
+	left join ingredient ing on ing.ing_id = r.ing_id
+	group by 1,2,3,4,5,6,7,8) s1;
